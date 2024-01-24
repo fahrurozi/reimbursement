@@ -1,0 +1,14 @@
+{
+  "generator-jhipster": {
+    "appsFolders": [
+      "gateway",
+      "expenseService",
+      "notificationService",
+      "employeeService"
+    ],
+    "baseName": "workspaces",
+    "clientPackageManager": "npm",
+    "directoryPath": "./",
+    "jhipsterVersion": "8.0.0"
+  }
+}

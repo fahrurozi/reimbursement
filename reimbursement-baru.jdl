@@ -1,0 +1,164 @@
+
+application {
+  config {
+    baseName gateway
+    applicationType gateway
+    packageName com.xtramile.internal
+    authenticationType oauth2
+    buildTool gradle
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    clientFramework angularX
+    serviceDiscoveryType consul
+    cacheProvider redis
+    serverPort 8080
+  }
+	entities *
+}
+
+application {
+  config {
+    baseName expenseService
+    applicationType microservice
+    packageName com.xtramile.internal
+    buildTool gradle
+    authenticationType oauth2
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    cacheProvider redis
+    serverPort 8081
+  }
+  entities UserExpense, ExpenseActivity, Category, Employee2
+}
+
+application {
+  config {
+    baseName notificationService
+    applicationType microservice
+    packageName com.xtramile.internal
+    buildTool gradle
+    authenticationType oauth2
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    cacheProvider redis
+    serverPort 8082
+  }
+  entities Notification
+}
+
+application {
+  config {
+    baseName employeeService
+    applicationType microservice
+    packageName com.xtramile.internal
+    buildTool gradle
+    authenticationType oauth2
+    devDatabaseType postgresql
+    prodDatabaseType postgresql
+    cacheProvider redis
+    serverPort 8083
+  }
+  entities Employee
+}
+
+entity Category {
+	id UUID unique
+	name String required unique maxlength(50)
+  	maxIdr BigDecimal required min(0)
+  	maxAud BigDecimal required min(0)
+    createdBy String maxlength(50) required
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+    recordStatusId Integer required
+}
+
+entity UserExpense {
+	id UUID unique
+    date Instant required
+    category String required maxlength(50)
+    total BigDecimal required min(0)
+    evidence String required maxlength(100)
+    exchangeRate BigDecimal min(0)
+    acceptedTotal BigDecimal min(0)
+    status Status required
+  	createdDate Instant required
+  	lastModifiedDate Instant required
+    recordStatusId Integer required
+    createdBy String maxlength(50) required
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+    recordStatusId Integer required
+}
+
+entity ExpenseActivity {
+	id UUID unique
+	description String maxlength(150)
+    createdDate Instant required
+    createdBy String maxlength(50) required
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+    recordStatusId Integer required
+}
+
+entity Notification {
+	id UUID unique
+	userId UUID required
+	description String maxlength(150)
+    isShow Boolean required
+    createdBy String maxlength(50) required
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+    recordStatusId Integer required   
+}
+
+entity Employee {
+	id UUID unique
+    name String required
+    gender Gender required
+    position String required
+    createdBy String maxlength(50) required
+    createdDate Instant required
+    lastModifiedBy String maxlength(50)
+    lastModifiedDate Instant
+    recordStatusId Integer required
+}
+
+entity Employee2 {
+	id UUID unique
+    name String required
+}
+
+enum Gender {
+  MALE (M),
+  FEMALE (F),
+  UNKNOWN (U)
+}
+
+enum Status{
+    NotSubmitted
+    MoveToNextPeriode
+    PartiallyApprovedOPAdmin
+    FullyApprovedOpAdmin
+    RejectedOPAdmin
+    PartiallyApprovedDOF
+    FullyApprovedDov
+    RejectedDOF
+    Revision
+}
+
+relationship ManyToOne {
+  ExpenseActivity to UserExpense
+  UserExpense to Employee2
+  ExpenseActivity to Employee2
+}
+
+dto * with mapstruct
+service * with serviceImpl
+
+microservice ExpenseActivity, Category, UserExpense, Employee2 with expenseService
+microservice Notification with notificationService
+microservice Employee with employeeService

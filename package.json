@@ -1,0 +1,44 @@
+{
+  "workspaces": {
+    "packages": [
+      "gateway",
+      "expenseService",
+      "notificationService",
+      "employeeService"
+    ]
+  },
+  "scripts": {
+    "backend:build-cache": "concurrently npm:backend:build-cache:gateway npm:backend:build-cache:expenseService npm:backend:build-cache:notificationService npm:backend:build-cache:employeeService",
+    "backend:build-cache:employeeService": "npm run backend:build-cache --workspace employeeService --if-present",
+    "backend:build-cache:expenseService": "npm run backend:build-cache --workspace expenseService --if-present",
+    "backend:build-cache:gateway": "npm run backend:build-cache --workspace gateway --if-present",
+    "backend:build-cache:notificationService": "npm run backend:build-cache --workspace notificationService --if-present",
+    "ci:backend:test": "npm run ci:backend:test --workspaces --if-present",
+    "ci:e2e:package": "npm run ci:docker:build --workspaces --if-present && npm run java:docker --workspaces --if-present",
+    "ci:e2e:run": "npm run e2e:headless --workspaces --if-present",
+    "ci:frontend:test": "npm run ci:frontend:test --workspaces --if-present",
+    "java:docker": "concurrently npm:java:docker:gateway npm:java:docker:expenseService npm:java:docker:notificationService npm:java:docker:employeeService",
+    "java:docker:arm64": "concurrently npm:java:docker:arm64:gateway npm:java:docker:arm64:expenseService npm:java:docker:arm64:notificationService npm:java:docker:arm64:employeeService",
+    "java:docker:arm64:employeeService": "npm run java:docker:arm64 --workspace employeeService --if-present",
+    "java:docker:arm64:expenseService": "npm run java:docker:arm64 --workspace expenseService --if-present",
+    "java:docker:arm64:gateway": "npm run java:docker:arm64 --workspace gateway --if-present",
+    "java:docker:arm64:notificationService": "npm run java:docker:arm64 --workspace notificationService --if-present",
+    "java:docker:employeeService": "npm run java:docker --workspace employeeService --if-present",
+    "java:docker:expenseService": "npm run java:docker --workspace expenseService --if-present",
+    "java:docker:gateway": "npm run java:docker --workspace gateway --if-present",
+    "java:docker:notificationService": "npm run java:docker --workspace notificationService --if-present",
+    "watch": "concurrently npm:watch:gateway npm:watch:expenseService npm:watch:notificationService npm:watch:employeeService",
+    "watch:employeeService": "npm run watch --workspace employeeService --if-present",
+    "watch:expenseService": "npm run watch --workspace expenseService --if-present",
+    "watch:gateway": "npm run watch --workspace gateway --if-present",
+    "watch:notificationService": "npm run watch --workspace notificationService --if-present",
+    "webapp:test": "npm run webapp:test --workspaces --if-present"
+  },
+  "devDependencies": {
+    "concurrently": "8.2.2",
+    "rxjs": "7.8.1"
+  },
+  "overrides": {
+    "webpack": "5.89.0"
+  }
+}
